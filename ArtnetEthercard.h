@@ -22,18 +22,14 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-#ifndef ARTNET_H
-#define ARTNET_H
+#ifndef ARTNET_ETHERCARD_H
+#define ARTNET_ETHERCARD_H
 
 #include <Arduino.h>
 
-#if defined(ARDUINO_SAMD_ZERO)
-    #include <WiFi101.h>
-    #include <WiFiUdp.h>
-#else
-    #include <Ethernet.h>
-    #include <EthernetUdp.h>
-#endif
+#include <Ethercard.h>
+#include <IPAddress.h>
+
 
 // UDP specific
 #define ART_NET_PORT 6454
@@ -46,17 +42,26 @@ THE SOFTWARE.
 #define ART_NET_ID "Art-Net\0"
 #define ART_DMX_START 18
 
-class Artnet
+class ArtnetEthercard
 {
 public:
+<<<<<<< HEAD:ArtnetEthercard.h
+  ArtnetEthercard();
+=======
   Artnet();
-
+>>>>>>> 1bad6a5986cd3c261d52c12784023316799b4f86:Artnet.h
+  void begin();
+  void begin(byte mac[]);
   void begin(byte mac[], byte ip[], byte dns[], byte gateway[], byte subnet[]);
   void begin(byte mac[], byte ip[]);
-  void begin();
+
   uint16_t read();
-  void printPacketHeader();
-  void printPacketContent();
+<<<<<<< HEAD:ArtnetEthercard.h
+  void _udpCallback(uint16_t dest_port, uint8_t src_ip[IP_LEN], uint16_t src_port, const char *artnetPacket, uint16_t len);
+=======
+>>>>>>> 1bad6a5986cd3c261d52c12784023316799b4f86:Artnet.h
+  //void printPacketHeader();
+  //void printPacketContent();
 
   // Return a pointer to the start of the DMX data
   inline uint8_t* getDmxFrame(void)
@@ -90,14 +95,8 @@ public:
   }
 
 private:
-  #if defined(ARDUINO_SAMD_ZERO)
-    WiFiUDP Udp;
-  #else
-    EthernetUDP Udp;
-  #endif
-
-
-  uint8_t artnetPacket[MAX_BUFFER_ARTNET];
+  uint16_t lastPacketState = 0;
+  uint8_t *artnetPacket;
   uint16_t packetSize;
   uint16_t opcode;
   uint8_t sequence;

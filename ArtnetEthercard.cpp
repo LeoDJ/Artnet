@@ -22,19 +22,95 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-#include <Artnet.h>
+#include <ArtnetEthercard.h>
 
-Artnet::Artnet() {}
+byte Ethernet::buffer[MAX_BUFFER_ARTNET];
 
+<<<<<<< HEAD:ArtnetEthercard.cpp
+ArtnetEthercard::ArtnetEthercard() {}
+
+
+void ArtnetEthercard::begin()
+{
+  //ether.udpServerListenOnPort(callback, ART_NET_PORT);
+}
+=======
+
+void Artnet::begin()
+{
+  Udp.begin(ART_NET_PORT);
+}
+
+void Artnet::begin(byte mac[])
+{
+  #if !defined(ARDUINO_SAMD_ZERO)
+    Ethernet.begin(mac);
+  #endif
+>>>>>>> 1bad6a5986cd3c261d52c12784023316799b4f86:Artnet.cpp
+
+void ArtnetEthercard::begin(byte mac[])
+{
+  ether.begin(sizeof Ethernet::buffer, mac);
+  ether.dhcpSetup();
+  //ether.udpServerListenOnPort(&ArtnetEthercard::udpCallback, ART_NET_PORT);
+}
+
+<<<<<<< HEAD:ArtnetEthercard.cpp
+void ArtnetEthercard::begin(byte mac[], byte ip[])
+{
+  ether.begin(sizeof Ethernet::buffer, mac);
+  ether.staticSetup(ip);
+  //ether.udpServerListenOnPort(&ArtnetEthercard::udpCallback, ART_NET_PORT);
+}
+=======
 void Artnet::begin(byte mac[], byte ip[])
 {
   #if !defined(ARDUINO_SAMD_ZERO)
     Ethernet.begin(mac,ip);
   #endif
+>>>>>>> 1bad6a5986cd3c261d52c12784023316799b4f86:Artnet.cpp
 
-  Udp.begin(ART_NET_PORT);
+void ArtnetEthercard::begin(byte mac[], byte ip[], byte dns[], byte gateway[], byte subnet[])
+{
+  ether.begin(sizeof Ethernet::buffer, mac);
+  ether.staticSetup(ip, gateway, dns, subnet);
+  //ether.udpServerListenOnPort(&ArtnetEthercard::udpCallback, ART_NET_PORT);
 }
 
+<<<<<<< HEAD:ArtnetEthercard.cpp
+void ArtnetEthercard::_udpCallback(uint16_t dest_port, uint8_t src_ip[IP_LEN], uint16_t src_port, const char *data, uint16_t len) 
+{
+  if (len < 16 || len > MAX_BUFFER_ARTNET)
+    lastPacketState = 0;
+    return;
+
+  // Check that packetID is "Art-Net" else ignore
+  for (byte i = 0 ; i < 8 ; i++)
+  {
+    if ((uint8_t)data[i] != ART_NET_ID[i])
+      lastPacketState = 0;
+      return;
+  }
+  opcode = (uint8_t)data[8] | (uint8_t)data[9] << 8;
+  
+  if (opcode == ART_DMX)
+  {
+    sequence = (uint8_t)data[12];
+    incomingUniverse = (uint8_t)data[14] | (uint8_t)data[15] << 8;
+    dmxDataLength = (uint8_t)data[17] | (uint8_t)data[16] << 8;
+    artnetPacket = data;
+    if (artDmxCallback) (*artDmxCallback)(incomingUniverse, dmxDataLength, sequence, artnetPacket + ART_DMX_START);
+    lastPacketState = ART_DMX;
+    return;
+  }
+  if (opcode == ART_POLL)
+  {
+    lastPacketState = ART_POLL;
+    return;
+  }
+  lastPacketState = 0;
+  return;
+=======
 void Artnet::begin(byte mac[], byte ip[], byte dns[], byte gateway[], byte subnet[])
 {
   #if !defined(ARDUINO_SAMD_ZERO)
@@ -42,16 +118,14 @@ void Artnet::begin(byte mac[], byte ip[], byte dns[], byte gateway[], byte subne
   #endif
 
   Udp.begin(ART_NET_PORT);
+>>>>>>> 1bad6a5986cd3c261d52c12784023316799b4f86:Artnet.cpp
 }
 
-void Artnet::begin()
+uint16_t ArtnetEthercard::read()
 {
-  Udp.begin(ART_NET_PORT);
-}
-
-uint16_t Artnet::read()
-{
-  packetSize = Udp.parsePacket();
+  ether.packetLoop(ether.packetReceive());
+  return lastPacketState;
+  /*packetSize = Udp.parsePacket();
 
   if (packetSize <= MAX_BUFFER_ARTNET && packetSize > 0)
   {
@@ -84,10 +158,14 @@ uint16_t Artnet::read()
   else
   {
     return 0;
-  }
+  }*/
 }
-
+/*
+<<<<<<< HEAD:ArtnetEthercard.cpp
+void ArtnetEthercard::printPacketHeader()
+=======
 void Artnet::printPacketHeader()
+>>>>>>> 1bad6a5986cd3c261d52c12784023316799b4f86:Artnet.cpp
 {
   Serial.print("packet size = ");
   Serial.print(packetSize);
@@ -101,7 +179,7 @@ void Artnet::printPacketHeader()
   Serial.println(sequence);
 }
 
-void Artnet::printPacketContent()
+void ArtnetEthercard::printPacketContent()
 {
   for (uint16_t i = ART_DMX_START ; i < dmxDataLength ; i++){
     Serial.print(artnetPacket[i], DEC);
@@ -109,3 +187,4 @@ void Artnet::printPacketContent()
   }
   Serial.println('\n');
 }
+*/
