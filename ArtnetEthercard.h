@@ -45,21 +45,14 @@ THE SOFTWARE.
 class ArtnetEthercard
 {
 public:
-<<<<<<< HEAD:ArtnetEthercard.h
   ArtnetEthercard();
-=======
-  Artnet();
->>>>>>> 1bad6a5986cd3c261d52c12784023316799b4f86:Artnet.h
   void begin();
   void begin(byte mac[]);
   void begin(byte mac[], byte ip[], byte dns[], byte gateway[], byte subnet[]);
   void begin(byte mac[], byte ip[]);
 
   uint16_t read();
-<<<<<<< HEAD:ArtnetEthercard.h
   void _udpCallback(uint16_t dest_port, uint8_t src_ip[IP_LEN], uint16_t src_port, const char *artnetPacket, uint16_t len);
-=======
->>>>>>> 1bad6a5986cd3c261d52c12784023316799b4f86:Artnet.h
   //void printPacketHeader();
   //void printPacketContent();
 

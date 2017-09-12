@@ -26,7 +26,6 @@ THE SOFTWARE.
 
 byte Ethernet::buffer[MAX_BUFFER_ARTNET];
 
-<<<<<<< HEAD:ArtnetEthercard.cpp
 ArtnetEthercard::ArtnetEthercard() {}
 
 
@@ -34,19 +33,6 @@ void ArtnetEthercard::begin()
 {
   //ether.udpServerListenOnPort(callback, ART_NET_PORT);
 }
-=======
-
-void Artnet::begin()
-{
-  Udp.begin(ART_NET_PORT);
-}
-
-void Artnet::begin(byte mac[])
-{
-  #if !defined(ARDUINO_SAMD_ZERO)
-    Ethernet.begin(mac);
-  #endif
->>>>>>> 1bad6a5986cd3c261d52c12784023316799b4f86:Artnet.cpp
 
 void ArtnetEthercard::begin(byte mac[])
 {
@@ -55,20 +41,12 @@ void ArtnetEthercard::begin(byte mac[])
   //ether.udpServerListenOnPort(&ArtnetEthercard::udpCallback, ART_NET_PORT);
 }
 
-<<<<<<< HEAD:ArtnetEthercard.cpp
 void ArtnetEthercard::begin(byte mac[], byte ip[])
 {
   ether.begin(sizeof Ethernet::buffer, mac);
   ether.staticSetup(ip);
   //ether.udpServerListenOnPort(&ArtnetEthercard::udpCallback, ART_NET_PORT);
 }
-=======
-void Artnet::begin(byte mac[], byte ip[])
-{
-  #if !defined(ARDUINO_SAMD_ZERO)
-    Ethernet.begin(mac,ip);
-  #endif
->>>>>>> 1bad6a5986cd3c261d52c12784023316799b4f86:Artnet.cpp
 
 void ArtnetEthercard::begin(byte mac[], byte ip[], byte dns[], byte gateway[], byte subnet[])
 {
@@ -77,7 +55,6 @@ void ArtnetEthercard::begin(byte mac[], byte ip[], byte dns[], byte gateway[], b
   //ether.udpServerListenOnPort(&ArtnetEthercard::udpCallback, ART_NET_PORT);
 }
 
-<<<<<<< HEAD:ArtnetEthercard.cpp
 void ArtnetEthercard::_udpCallback(uint16_t dest_port, uint8_t src_ip[IP_LEN], uint16_t src_port, const char *data, uint16_t len) 
 {
   if (len < 16 || len > MAX_BUFFER_ARTNET)
@@ -110,15 +87,6 @@ void ArtnetEthercard::_udpCallback(uint16_t dest_port, uint8_t src_ip[IP_LEN], u
   }
   lastPacketState = 0;
   return;
-=======
-void Artnet::begin(byte mac[], byte ip[], byte dns[], byte gateway[], byte subnet[])
-{
-  #if !defined(ARDUINO_SAMD_ZERO)
-    Ethernet.begin(mac, ip, dns, gateway, subnet);
-  #endif
-
-  Udp.begin(ART_NET_PORT);
->>>>>>> 1bad6a5986cd3c261d52c12784023316799b4f86:Artnet.cpp
 }
 
 uint16_t ArtnetEthercard::read()
@@ -161,11 +129,7 @@ uint16_t ArtnetEthercard::read()
   }*/
 }
 /*
-<<<<<<< HEAD:ArtnetEthercard.cpp
 void ArtnetEthercard::printPacketHeader()
-=======
-void Artnet::printPacketHeader()
->>>>>>> 1bad6a5986cd3c261d52c12784023316799b4f86:Artnet.cpp
 {
   Serial.print("packet size = ");
   Serial.print(packetSize);
