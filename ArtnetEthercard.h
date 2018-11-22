@@ -37,7 +37,7 @@ THE SOFTWARE.
 #define ART_POLL 0x2000
 #define ART_DMX 0x5000
 // Buffers
-#define MAX_BUFFER_ARTNET 600
+#define MAX_BUFFER_ARTNET 530
 // Packet
 #define ART_NET_ID "Art-Net\0"
 #define ART_DMX_START 18
@@ -85,6 +85,10 @@ public:
   inline void setArtDmxCallback(void (*fptr)(uint16_t universe, uint16_t length, uint8_t sequence, uint8_t* data))
   {
     artDmxCallback = fptr;
+  }
+
+  inline void doneProcessing() {
+    lastPacketState = 0;
   }
 
 private:
