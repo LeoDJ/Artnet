@@ -57,19 +57,25 @@ void ArtnetEthercard::begin(byte mac[], byte ip[], byte dns[], byte gateway[], b
 
 void ArtnetEthercard::_udpCallback(uint16_t dest_port, uint8_t src_ip[IP_LEN], uint16_t src_port, const char *data, uint16_t len) 
 {
-  if (len < 16 || len > MAX_BUFFER_ARTNET)
+  if (len < 16 || len > MAX_BUFFER_ARTNET) {
     lastPacketState = 0;
+    Serial.print(F("ArtnetEthercard ERR: Packet too "));
+    Serial.print(len < 16 ? "short: " : "long: ");
+    Serial.println(len);
     return;
+  }
 
   // Check that packetID is "Art-Net" else ignore
   for (byte i = 0 ; i < 8 ; i++)
   {
-    if ((uint8_t)data[i] != ART_NET_ID[i])
+    if ((uint8_t)data[i] != ART_NET_ID[i]) {
       lastPacketState = 0;
+      Serial.println(F("ArtnetEthercard ERR: No valid Art-Net header found."));
       return;
+    }
   }
   opcode = (uint8_t)data[8] | (uint8_t)data[9] << 8;
-  
+  //Serial.println(opcode);
   if (opcode == ART_DMX)
   {
     sequence = (uint8_t)data[12];
@@ -78,6 +84,7 @@ void ArtnetEthercard::_udpCallback(uint16_t dest_port, uint8_t src_ip[IP_LEN], u
     artnetPacket = data;
     if (artDmxCallback) (*artDmxCallback)(incomingUniverse, dmxDataLength, sequence, artnetPacket + ART_DMX_START);
     lastPacketState = ART_DMX;
+    //Serial.println(dmxDataLength);
     return;
   }
   if (opcode == ART_POLL)
